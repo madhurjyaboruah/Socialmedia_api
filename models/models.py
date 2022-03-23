@@ -16,3 +16,6 @@ class Update(BaseModel):
     name :str =None
     Age: int =None
     School: str=None
+class Delete(BaseModel):
+    password :str
+    conf_password: str
