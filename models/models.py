@@ -18,4 +18,4 @@ class Update(BaseModel):
     School: str=None
 class Delete(BaseModel):
     password :str
-    conf_password: str
+    confirm_password: str

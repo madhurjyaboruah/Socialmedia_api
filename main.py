@@ -1,4 +1,4 @@
-from unittest import result
+# from unittest import result
 from fastapi import FastAPI, Body, Header
 import hashlib
 import os
@@ -120,4 +120,4 @@ async def verify(id, email_id: str= Header('email_id', convert_underscores=False
 
 if __name__ == '__main__':
     print(__name__)
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run("main:app", host = "0.0.0.0", port = 8000, reload=True)
