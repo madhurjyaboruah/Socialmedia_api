@@ -1,7 +1,3 @@
-from pickle import FALSE, TRUE
-import re
-
-
 def verify_token(email_id,token,sessioncol):
     result= sessioncol.find({"_id":email_id})
     for doc in result:
