@@ -1,50 +1,37 @@
-# from unittest import result
-from unittest import result
 from fastapi import FastAPI, Body, Header
-import hashlib
-import os
-import base64
 from App.user_detail import UserDetailsHandler
 # from pydantic import BaseModel
 from models import models
-from functions import verify_token
-# from mongoengine import connect
-import pymongo
 # from bson.objectid import ObjectId
 import uvicorn
+from utils import logger
+from DataHandler.MongoDbHandler import MongoDbHandler
 
-
-
-# mongo_connect =  connect(db="testapi", host="localhost", port=27017)
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = client["testapi"]
-studentCol = mydb["student"]
-sessioncol = mydb["session"]
-
+mongohandler = MongoDbHandler("mongodb://localhost:27017/","testapi")
 app = FastAPI()
-
-userdetailshandler = UserDetailsHandler()
+logger= logger.logging_info(logger)
+userdetailshandler = UserDetailsHandler(logger,mongohandler)
 
 @app.post('/create_user')
 async def create_user(user: models.User):
-    result=userdetailshandler.createuser(user,studentCol)
+    result=userdetailshandler.createuser(user)
     return result
    
 
 @app.post('/login')
 async def login(login_data: models.Login):
-    result=userdetailshandler.userlogin(login_data,studentCol,sessioncol)
+    result=userdetailshandler.userlogin(login_data)
     return result
 
 
 @app.post('/user_details')
 async def user_details(email_id:str=Header("email_id", convert_underscores=False),token:str=Header("token")):
-    result = userdetailshandler.userdetails(email_id,token,studentCol,sessioncol)
+    result = userdetailshandler.userdetails(email_id,token)
     return result
 
 @app.delete('/delete_user')
 async def delete_user(email_id:str=Header("email_id", convert_underscores=False),token:str=Header("token")):
-    result=userdetailshandler.deleteuser(email_id,token,studentCol,sessioncol)
+    result=userdetailshandler.deleteuser(email_id,token)
     return result
     
 
@@ -52,14 +39,15 @@ async def delete_user(email_id:str=Header("email_id", convert_underscores=False)
    
 @app.patch('/user_update')
 async def user_update(update:models.Update,email_id:str=Header("email_id", convert_underscores=False),token:str=Header("token")):
-    result = userdetailshandler.userupdate(email_id,token,update,studentCol,sessioncol)
+    result = userdetailshandler.userupdate(email_id,token,update)
+    return result
    
-@app.get('/verify/{id}')
-async def verify(id, email_id: str= Header('email_id', convert_underscores=False), token: str= Header('token')):
-    print(id)
-    result = studentCol.find({"_id":id})
-    for doc in result:
-        return doc
+# @app.get('/verify/{id}')
+# async def verify(id, email_id: str= Header('email_id', convert_underscores=False), token: str= Header('token')):
+#     print(id)
+#     result = studentCol.find({"_id":id})
+#     for doc in result:
+#         return doc
 
 if __name__ == '__main__':
     print(__name__)

@@ -65,7 +65,7 @@ class UserDetailsHandler:
                                     "token_id" :token
                 }
                 self.sessionCol.insert_one(session_details.copy())
-                self.__mongoDbHandler.insert_one(collection_name="session",doc=session_details = { "_id":login_data.email_id,"token_id" :token})
+                self.__mongoDbHandler.insert_one(collection_name="session",session_details = { "_id":login_data.email_id,"token_id" :token})
                 self.__logger.info('user login successfully 2...')
                 return {"token":token}
     
